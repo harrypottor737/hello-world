@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Dubbed Result</title>
+	<link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+	<div class="container">
+		<h1>Dubbed to {{ target_lang_label }}</h1>
+		<div class="videos">
+			<div class="card">
+				<h2>Original</h2>
+				<video controls src="{{ original_video_url }}" width="100%"></video>
+			</div>
+			<div class="card">
+				<h2>Dubbed</h2>
+				<video controls src="{{ dubbed_video_url }}" width="100%"></video>
+				<a class="button" href="{{ dubbed_video_url }}" download>Download Dubbed Video</a>
+			</div>
+		</div>
+		<a class="link" href="/">Process another video</a>
+	</div>
+</body>
+</html>
