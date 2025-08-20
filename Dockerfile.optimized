@@ -1,0 +1,97 @@
+# Optimized Dockerfile for Video Dubbing Tool with Lip Sync
+# Multi-stage build with aggressive optimization for production
+
+# Stage 1: Base Python image with system dependencies
+FROM python:3.11-slim as base
+
+# Install system dependencies in a single layer
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg \
+    libsndfile1 \
+    libasound2 \
+    portaudio19-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean \
+    && rm -rf /var/cache/apt/*
+
+# Stage 2: Python dependencies builder
+FROM base as python-deps
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    pkg-config \
+    libffi-dev \
+    libssl-dev \
+    libsndfile1-dev \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create and activate virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Copy requirements and install with optimizations
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir --compile -r requirements.txt && \
+    find /opt/venv -name "*.pyc" -delete && \
+    find /opt/venv -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
+
+# Stage 3: Model downloader (optional - for pre-downloading Whisper models)
+FROM python-deps as model-downloader
+
+# Pre-download Whisper model to reduce startup time
+RUN python -c "import whisper; whisper.load_model('base')"
+
+# Stage 4: Final production image
+FROM base as production
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PATH="/opt/venv/bin:$PATH" \
+    FLASK_APP=app_lipsync.py \
+    FLASK_ENV=production \
+    PYTHONPATH="/app"
+
+# Copy virtual environment from builder
+COPY --from=python-deps /opt/venv /opt/venv
+
+# Copy pre-downloaded models (optional)
+COPY --from=model-downloader /root/.cache/whisper /app/.cache/whisper
+
+# Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser -d /app -s /bin/bash appuser
+
+# Create application directory structure
+WORKDIR /app
+RUN mkdir -p uploads outputs temp static/css static/js templates .cache/whisper && \
+    chown -R appuser:appuser /app
+
+# Copy application files with proper ownership
+COPY --chown=appuser:appuser app_lipsync.py .
+COPY --chown=appuser:appuser templates/ templates/
+COPY --chown=appuser:appuser static/ static/
+COPY --chown=appuser:appuser docker/healthcheck.py healthcheck.py
+
+# Create .gitkeep files for volume mount points
+RUN touch uploads/.gitkeep outputs/.gitkeep temp/.gitkeep && \
+    chown appuser:appuser uploads/.gitkeep outputs/.gitkeep temp/.gitkeep
+
+# Switch to non-root user
+USER appuser
+
+# Set cache directory for Whisper models
+ENV XDG_CACHE_HOME=/app/.cache
+
+# Expose port
+EXPOSE 5001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD python healthcheck.py || exit 1
+
+# Use exec form for better signal handling
+CMD ["python", "-u", "app_lipsync.py"]
