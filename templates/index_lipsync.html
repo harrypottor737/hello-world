@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Video Dubbing Tool - Lip Sync AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <style>
+        .lip-sync-badge {
+            background: linear-gradient(45deg, #ff6b6b, #ffa726);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-left: 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
+        }
+        
+        .enhancement-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .timing-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .sync-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #28a745;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: blink 1.5s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <header class="text-center py-4 mb-4">
+            <h1 class="display-4 text-primary">
+                <i class="fas fa-video me-3"></i>
+                Enhanced Video Dubbing Tool
+                <span class="lip-sync-badge">
+                    <i class="fas fa-sync-alt me-1"></i>
+                    LIP SYNC AI
+                </span>
+            </h1>
+            <p class="lead text-muted">Advanced AI-powered dubbing with precise lip synchronization</p>
+        </header>
+
+        <!-- Enhancement Banner -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="enhancement-card">
+                    <h5 class="mb-3">
+                        <i class="fas fa-star me-2"></i>
+                        New Lip Sync Enhancements
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled mb-0">
+                                <li><i class="fas fa-check text-warning me-2"></i>Word-level timestamp extraction</li>
+                                <li><i class="fas fa-check text-warning me-2"></i>Segment-based audio generation</li>
+                                <li><i class="fas fa-check text-warning me-2"></i>Audio time-stretching for duration matching</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled mb-0">
+                                <li><i class="fas fa-check text-warning me-2"></i>Precise timing preservation</li>
+                                <li><i class="fas fa-check text-warning me-2"></i>Enhanced synchronization algorithms</li>
+                                <li><i class="fas fa-check text-warning me-2"></i>Professional-grade lip sync accuracy</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Upload Section -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-upload me-2"></i>
+                            Upload & Configure
+                            <span class="sync-indicator"></span>
+                            <small>Lip Sync Ready</small>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="uploadForm" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="videoFile" class="form-label">Select Video File</label>
+                                <input type="file" class="form-control" id="videoFile" name="video" 
+                                       accept="video/*" required>
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Supported formats: MP4, AVI, MOV, MKV | Optimized for clear speech content
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="targetLanguage" class="form-label">Target Language</label>
+                                <select class="form-select" id="targetLanguage" name="language" required>
+                                    <option value="">Select a language...</option>
+                                    <option value="hindi">Hindi (हिंदी)</option>
+                                    <option value="kannada">Kannada (ಕನ್ನಡ)</option>
+                                    <option value="tamil">Tamil (தமிழ்)</option>
+                                    <option value="telugu">Telugu (తెలుగు)</option>
+                                    <option value="malayalam">Malayalam (മലയാളം)</option>
+                                    <option value="marathi">Marathi (मराठी)</option>
+                                    <option value="gujarati">Gujarati (ગુજરાતી)</option>
+                                    <option value="punjabi">Punjabi (ਪੰਜਾਬੀ)</option>
+                                    <option value="bengali">Bengali (বাংলা)</option>
+                                    <option value="urdu">Urdu (اردو)</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-lg w-100" id="submitBtn">
+                                <i class="fas fa-magic me-2"></i>
+                                Start Lip Sync Dubbing
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Enhanced Progress Section -->
+                <div class="card shadow-sm mt-4" id="progressCard" style="display: none;">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-cogs me-2"></i>
+                            Lip Sync Processing Status
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="progress mb-3" style="height: 25px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                 role="progressbar" style="width: 0%;" id="progressBar">
+                                <span id="progressText">Starting...</span>
+                            </div>
+                        </div>
+                        <div id="statusText" class="text-muted">
+                            Initializing enhanced dubbing process with lip sync...
+                        </div>
+                        
+                        <!-- Timing Info -->
+                        <div class="timing-info" id="timingInfo" style="display: none;">
+                            <h6><i class="fas fa-clock me-2"></i>Processing Details</h6>
+                            <div id="timingDetails"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="col-lg-6">
+                <div class="card shadow-sm" id="resultsCard" style="display: none;">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Lip Sync Results
+                            <small class="ms-2">
+                                <i class="fas fa-sync-alt me-1"></i>
+                                Synchronized
+                            </small>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Original Video -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold">
+                                <i class="fas fa-play-circle me-2"></i>
+                                Original Video
+                            </h6>
+                            <video id="originalVideo" class="w-100" controls style="max-height: 300px;">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+
+                        <!-- Lip Synced Video -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold">
+                                <i class="fas fa-magic me-2"></i>
+                                Lip Synced Dubbed Video
+                                <span class="badge bg-success ms-2">
+                                    <i class="fas fa-sync-alt me-1"></i>
+                                    Enhanced Sync
+                                </span>
+                            </h6>
+                            <video id="dubbedVideo" class="w-100" controls style="max-height: 300px;">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+
+                        <!-- Text Comparison -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="fw-bold">Original Text</h6>
+                                <div class="border p-3 rounded bg-light" id="originalText" 
+                                     style="max-height: 200px; overflow-y: auto;">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="fw-bold">Translated Text</h6>
+                                <div class="border p-3 rounded bg-light" id="translatedText" 
+                                     style="max-height: 200px; overflow-y: auto;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sync Quality Info -->
+                        <div class="timing-info mt-3" id="syncQualityInfo" style="display: none;">
+                            <h6><i class="fas fa-chart-line me-2"></i>Synchronization Quality</h6>
+                            <div id="syncDetails"></div>
+                        </div>
+
+                        <!-- Download Button -->
+                        <div class="text-center mt-4">
+                            <button class="btn btn-success btn-lg" id="downloadBtn">
+                                <i class="fas fa-download me-2"></i>
+                                Download Lip Synced Video
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error Card -->
+                <div class="card shadow-sm" id="errorCard" style="display: none;">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Processing Error
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="errorMessage" class="text-danger"></div>
+                        <button class="btn btn-outline-primary mt-3" onclick="resetForm()">
+                            <i class="fas fa-redo me-2"></i>
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Features Section -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="text-center mb-4">Enhanced Lip Sync Workflow</h3>
+                <div class="row">
+                    <div class="col-md-2 text-center mb-3">
+                        <div class="feature-icon">
+                            <i class="fas fa-upload fa-3x text-primary mb-3"></i>
+                        </div>
+                        <h6>1. Upload</h6>
+                        <p class="text-muted small">Video analysis</p>
+                    </div>
+                    <div class="col-md-2 text-center mb-3">
+                        <div class="feature-icon">
+                            <i class="fas fa-waveform fa-3x text-info mb-3"></i>
+                        </div>
+                        <h6>2. Extract</h6>
+                        <p class="text-muted small">Audio separation</p>
+                    </div>
+                    <div class="col-md-2 text-center mb-3">
+                        <div class="feature-icon">
+                            <i class="fas fa-clock fa-3x text-warning mb-3"></i>
+                        </div>
+                        <h6>3. Timestamp</h6>
+                        <p class="text-muted small">Word-level timing</p>
+                    </div>
+                    <div class="col-md-2 text-center mb-3">
+                        <div class="feature-icon">
+                            <i class="fas fa-language fa-3x text-danger mb-3"></i>
+                        </div>
+                        <h6>4. Translate</h6>
+                        <p class="text-muted small">Segment-based</p>
+                    </div>
+                    <div class="col-md-2 text-center mb-3">
+                        <div class="feature-icon">
+                            <i class="fas fa-compress-alt fa-3x text-secondary mb-3"></i>
+                        </div>
+                        <h6>5. Stretch</h6>
+                        <p class="text-muted small">Time alignment</p>
+                    </div>
+                    <div class="col-md-2 text-center mb-3">
+                        <div class="feature-icon">
+                            <i class="fas fa-sync-alt fa-3x text-success mb-3"></i>
+                        </div>
+                        <h6>6. Sync</h6>
+                        <p class="text-muted small">Lip synchronization</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Enhanced Video Dubbing App with Lip Sync
+        class EnhancedVideoDubbingApp {
+            constructor() {
+                this.initializeElements();
+                this.bindEvents();
+                this.currentSessionId = null;
+                this.dubbedVideoUrl = null;
+            }
+
+            initializeElements() {
+                this.uploadForm = document.getElementById('uploadForm');
+                this.submitBtn = document.getElementById('submitBtn');
+                this.progressCard = document.getElementById('progressCard');
+                this.progressBar = document.getElementById('progressBar');
+                this.progressText = document.getElementById('progressText');
+                this.statusText = document.getElementById('statusText');
+                this.timingInfo = document.getElementById('timingInfo');
+                this.timingDetails = document.getElementById('timingDetails');
+                this.resultsCard = document.getElementById('resultsCard');
+                this.errorCard = document.getElementById('errorCard');
+                this.errorMessage = document.getElementById('errorMessage');
+                this.originalVideo = document.getElementById('originalVideo');
+                this.dubbedVideo = document.getElementById('dubbedVideo');
+                this.originalText = document.getElementById('originalText');
+                this.translatedText = document.getElementById('translatedText');
+                this.syncQualityInfo = document.getElementById('syncQualityInfo');
+                this.syncDetails = document.getElementById('syncDetails');
+                this.downloadBtn = document.getElementById('downloadBtn');
+            }
+
+            bindEvents() {
+                this.uploadForm.addEventListener('submit', (e) => this.handleSubmit(e));
+                this.downloadBtn.addEventListener('click', () => this.downloadVideo());
+            }
+
+            async handleSubmit(event) {
+                event.preventDefault();
+                
+                const formData = new FormData(this.uploadForm);
+                const videoFile = formData.get('video');
+                const language = formData.get('language');
+
+                if (!videoFile || !language) {
+                    this.showError('Please select a video file and target language.');
+                    return;
+                }
+
+                if (videoFile.size > 100 * 1024 * 1024) {
+                    this.showError('File size too large. Please select a video smaller than 100MB.');
+                    return;
+                }
+
+                if (!videoFile.type.startsWith('video/')) {
+                    this.showError('Please select a valid video file.');
+                    return;
+                }
+
+                this.startProcessing();
+                
+                try {
+                    const response = await fetch('/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        this.showResults(result);
+                    } else {
+                        this.showError(result.error || 'An error occurred during processing.');
+                    }
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    this.showError('Network error. Please check your connection and try again.');
+                }
+            }
+
+            startProcessing() {
+                this.hideAllCards();
+                this.progressCard.style.display = 'block';
+                this.submitBtn.disabled = true;
+                this.submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing with Lip Sync...';
+
+                this.simulateEnhancedProgress();
+            }
+
+            simulateEnhancedProgress() {
+                const steps = [
+                    { progress: 5, text: 'Uploading video...', status: 'Analyzing video file and preparing for processing' },
+                    { progress: 15, text: 'Extracting audio...', status: 'Separating high-quality audio track using FFmpeg' },
+                    { progress: 30, text: 'Word-level transcription...', status: 'AI extracting speech with precise timestamps' },
+                    { progress: 50, text: 'Segment translation...', status: 'Translating text segments while preserving timing' },
+                    { progress: 70, text: 'Generating timed speech...', status: 'Creating synchronized audio segments' },
+                    { progress: 85, text: 'Time-stretching audio...', status: 'Adjusting audio timing for perfect lip sync' },
+                    { progress: 95, text: 'Final synchronization...', status: 'Combining all segments with enhanced timing' },
+                    { progress: 100, text: 'Complete!', status: 'Lip sync dubbing completed successfully' }
+                ];
+
+                let currentStep = 0;
+                const interval = setInterval(() => {
+                    if (currentStep < steps.length) {
+                        const step = steps[currentStep];
+                        this.updateProgress(step.progress, step.text, step.status);
+                        
+                        // Show timing info after transcription starts
+                        if (currentStep >= 2) {
+                            this.timingInfo.style.display = 'block';
+                            this.timingDetails.innerHTML = `
+                                <small class="text-muted">
+                                    <i class="fas fa-microchip me-1"></i>
+                                    Advanced processing: ${step.status}
+                                </small>
+                            `;
+                        }
+                        
+                        currentStep++;
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, 3000); // Slower for better user experience
+            }
+
+            updateProgress(percentage, text, status) {
+                this.progressBar.style.width = `${percentage}%`;
+                this.progressText.textContent = text;
+                this.statusText.textContent = status;
+            }
+
+            showResults(result) {
+                this.hideAllCards();
+                this.resultsCard.style.display = 'block';
+                
+                // Set video sources
+                this.originalVideo.src = result.original_video;
+                this.dubbedVideo.src = result.dubbed_video;
+                this.dubbedVideoUrl = result.dubbed_video;
+                
+                // Set text content
+                this.originalText.textContent = result.original_text;
+                this.translatedText.textContent = result.translated_text;
+                
+                // Show sync quality info
+                if (result.timing_info) {
+                    this.syncQualityInfo.style.display = 'block';
+                    this.syncDetails.innerHTML = `
+                        <div class="row">
+                            <div class="col-md-6">
+                                <small><strong>Segments processed:</strong> ${result.timing_info.total_segments}</small><br>
+                                <small><strong>Video duration:</strong> ${result.timing_info.video_duration?.toFixed(2)}s</small>
+                            </div>
+                            <div class="col-md-6">
+                                <small><strong>Sync method:</strong> ${result.timing_info.sync_method?.replace(/_/g, ' ')}</small><br>
+                                <small><strong>Lip sync:</strong> <span class="text-success">✓ Enhanced</span></small>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Store session ID
+                this.currentSessionId = result.session_id;
+                
+                // Reset form
+                this.resetFormState();
+            }
+
+            showError(message) {
+                this.hideAllCards();
+                this.errorCard.style.display = 'block';
+                this.errorMessage.textContent = message;
+                this.resetFormState();
+            }
+
+            hideAllCards() {
+                this.progressCard.style.display = 'none';
+                this.resultsCard.style.display = 'none';
+                this.errorCard.style.display = 'none';
+            }
+
+            resetFormState() {
+                this.submitBtn.disabled = false;
+                this.submitBtn.innerHTML = '<i class="fas fa-magic me-2"></i>Start Lip Sync Dubbing';
+            }
+
+            downloadVideo() {
+                if (this.dubbedVideoUrl) {
+                    const link = document.createElement('a');
+                    link.href = this.dubbedVideoUrl;
+                    link.download = `lipsynced_video_${this.currentSessionId}.mp4`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            }
+        }
+
+        // Initialize the enhanced app
+        document.addEventListener('DOMContentLoaded', function() {
+            const app = new EnhancedVideoDubbingApp();
+            
+            // Enhanced file input handler
+            const videoInput = document.getElementById('videoFile');
+            if (videoInput) {
+                videoInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const fileSize = (file.size / (1024 * 1024)).toFixed(2);
+                        const fileName = file.name;
+                        
+                        const fileInfo = document.createElement('div');
+                        fileInfo.className = 'alert alert-info mt-2';
+                        fileInfo.innerHTML = `
+                            <i class="fas fa-file-video me-2"></i>
+                            <strong>${fileName}</strong> (${fileSize} MB)
+                            <br><small class="text-muted">
+                                <i class="fas fa-sync-alt me-1"></i>
+                                Ready for enhanced lip sync processing
+                            </small>
+                        `;
+                        
+                        const existingInfo = videoInput.parentNode.querySelector('.alert');
+                        if (existingInfo) {
+                            existingInfo.remove();
+                        }
+                        
+                        videoInput.parentNode.appendChild(fileInfo);
+                    }
+                });
+            }
+        });
+
+        function resetForm() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
