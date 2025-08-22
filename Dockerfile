@@ -55,7 +55,7 @@ RUN apt-get update && apt-get install -y \
 COPY --from=builder /opt/venv /opt/venv
 
 # Create application user for security
-RUN groupadd -r appuser && useradd -r -g appuser appuser
+RUN groupadd -r appuser && useradd -r -m -g appuser appuser
 
 # Create application directory and required subdirectories
 WORKDIR /app
@@ -63,12 +63,13 @@ RUN mkdir -p uploads outputs temp static/css static/js templates && \
     chown -R appuser:appuser /app
 
 # Copy application files
+COPY app_working.py .
 COPY app_lipsync.py .
 COPY templates/ templates/
 COPY static/ static/
 COPY requirements.txt .
-COPY LIPSYNC_IMPROVEMENTS.md .
-COPY LIPSYNC_SOLUTION_SUMMARY.md .
+#COPY LIPSYNC_IMPROVEMENTS.md .
+#COPY LIPSYNC_SOLUTION_SUMMARY.md .
 
 # Copy health check script
 COPY docker/healthcheck.py .

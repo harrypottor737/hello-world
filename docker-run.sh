@@ -55,6 +55,7 @@ echo -e "${YELLOW}🚀 Starting container...${NC}"
 docker run -d \
     --name "${CONTAINER_NAME}" \
     -p "${HOST_PORT}:5001" \
+    -p "5002:5002" \
     -v "$(pwd)/uploads:/app/uploads" \
     -v "$(pwd)/outputs:/app/outputs" \
     -v "$(pwd)/temp:/app/temp" \

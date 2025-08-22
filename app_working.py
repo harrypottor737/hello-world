@@ -24,9 +24,9 @@ app = Flask(__name__)
 CORS(app)
 
 # Create necessary directories
-UPLOAD_DIR = "/workspace/uploads"
-OUTPUT_DIR = "/workspace/outputs"
-TEMP_DIR = "/workspace/temp"
+UPLOAD_DIR = "./uploads"
+OUTPUT_DIR = "./outputs"
+TEMP_DIR = "./temp"
 
 for directory in [UPLOAD_DIR, OUTPUT_DIR, TEMP_DIR]:
     os.makedirs(directory, exist_ok=True)
@@ -326,8 +326,8 @@ if __name__ == '__main__':
     print("• Text-to-speech conversion")
     print("• Audio-video synchronization")
     print("=" * 60)
-    print("🌐 Server starting at: http://localhost:5000")
-    print("🧪 Test endpoint: http://localhost:5000/test")
+    print("🌐 Server starting at: http://localhost:5002")
+    print("🧪 Test endpoint: http://localhost:5002/test")
     print("=" * 60)
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5002)

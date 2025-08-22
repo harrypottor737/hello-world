@@ -25,9 +25,9 @@ app = Flask(__name__)
 CORS(app)
 
 # Create necessary directories
-UPLOAD_DIR = "/workspace/uploads"
-OUTPUT_DIR = "/workspace/outputs"
-TEMP_DIR = "/workspace/temp"
+UPLOAD_DIR = "/app/uploads"
+OUTPUT_DIR = "/app/outputs"
+TEMP_DIR = "/app/temp"
 
 for directory in [UPLOAD_DIR, OUTPUT_DIR, TEMP_DIR]:
     os.makedirs(directory, exist_ok=True)
